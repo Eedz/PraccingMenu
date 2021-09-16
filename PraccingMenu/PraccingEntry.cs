@@ -321,7 +321,11 @@ namespace PraccingMenu
 
         private void cmdSave_Click(object sender, EventArgs e)
         {
-            SaveRecord();
+            if (SaveRecord() == 1)
+            {
+                MessageBox.Show("Error saving this issue.");
+                return;
+            }
         }
 
         private void cmdDeleteIssue_Click(object sender, EventArgs e)
