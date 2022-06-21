@@ -60,6 +60,7 @@
             this.bindingNavigatorDeleteItem = new System.Windows.Forms.ToolStripButton();
             this.picMain = new System.Windows.Forms.PictureBox();
             this.dataRepeater1 = new Microsoft.VisualBasic.PowerPacks.DataRepeater();
+            this.lblImageCount = new System.Windows.Forms.Label();
             this.cmdDeleteResponse = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
@@ -70,18 +71,19 @@
             this.rtbResponse = new System.Windows.Forms.RichTextBox();
             this.cmdAddResponse = new System.Windows.Forms.Button();
             this.panelSummary = new System.Windows.Forms.Panel();
+            this.lblTotalIssues = new System.Windows.Forms.Label();
             this.cmdFilterText = new System.Windows.Forms.Button();
             this.chkFilterUnresolved = new System.Windows.Forms.CheckBox();
             this.lblSeparator = new System.Windows.Forms.Label();
             this.lblSummary = new System.Windows.Forms.Label();
-            this.lblSmartDataIssues = new System.Windows.Forms.Label();
-            this.lblQuotaIssues = new System.Windows.Forms.Label();
-            this.lblCodingIssues = new System.Windows.Forms.Label();
-            this.lblInterfaceIssues = new System.Windows.Forms.Label();
-            this.lblWordingIssues = new System.Windows.Forms.Label();
-            this.lblTypoIssues = new System.Windows.Forms.Label();
-            this.lblSkipIssues = new System.Windows.Forms.Label();
-            this.lblTotalIssues = new System.Windows.Forms.Label();
+            this.lblIssueType7 = new System.Windows.Forms.Label();
+            this.lblIssueType6 = new System.Windows.Forms.Label();
+            this.lblIssueType5 = new System.Windows.Forms.Label();
+            this.lblIssueType4 = new System.Windows.Forms.Label();
+            this.lblIssueType3 = new System.Windows.Forms.Label();
+            this.lblIssueType2 = new System.Windows.Forms.Label();
+            this.lblIssueType1 = new System.Windows.Forms.Label();
+            this.lblUnresolvedIssues = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.formToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -95,6 +97,7 @@
             this.label16 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.lblEnteredBy = new System.Windows.Forms.Label();
             this.cmdSave = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
@@ -173,7 +176,7 @@
             // 
             // cboGoToSurvey
             // 
-            this.cboGoToSurvey.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.cboGoToSurvey.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
             this.cboGoToSurvey.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cboGoToSurvey.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboGoToSurvey.FormattingEnabled = true;
@@ -181,7 +184,6 @@
             this.cboGoToSurvey.Name = "cboGoToSurvey";
             this.cboGoToSurvey.Size = new System.Drawing.Size(121, 24);
             this.cboGoToSurvey.TabIndex = 8;
-            this.cboGoToSurvey.SelectedValueChanged += new System.EventHandler(this.cboGoToSurvey_SelectedValueChanged);
             // 
             // label1
             // 
@@ -195,7 +197,7 @@
             // 
             // cboGoToIssueNo
             // 
-            this.cboGoToIssueNo.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.cboGoToIssueNo.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
             this.cboGoToIssueNo.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cboGoToIssueNo.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboGoToIssueNo.FormattingEnabled = true;
@@ -327,6 +329,7 @@
             // 
             // panelImages
             // 
+            this.panelImages.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelImages.Controls.Add(this.navMainImages);
             this.panelImages.Controls.Add(this.picMain);
             this.panelImages.Location = new System.Drawing.Point(976, 265);
@@ -352,14 +355,14 @@
             this.bindingNavigatorSeparator5,
             this.bindingNavigatorAddNewItem,
             this.bindingNavigatorDeleteItem});
-            this.navMainImages.Location = new System.Drawing.Point(0, 208);
+            this.navMainImages.Location = new System.Drawing.Point(0, 206);
             this.navMainImages.MoveFirstItem = this.bindingNavigatorMoveFirstItem1;
             this.navMainImages.MoveLastItem = this.bindingNavigatorMoveLastItem1;
             this.navMainImages.MoveNextItem = this.bindingNavigatorMoveNextItem1;
             this.navMainImages.MovePreviousItem = this.bindingNavigatorMovePreviousItem1;
             this.navMainImages.Name = "navMainImages";
             this.navMainImages.PositionItem = this.bindingNavigatorPositionItem1;
-            this.navMainImages.Size = new System.Drawing.Size(394, 25);
+            this.navMainImages.Size = new System.Drawing.Size(392, 25);
             this.navMainImages.TabIndex = 1;
             this.navMainImages.Text = "bindingNavigator2";
             // 
@@ -455,7 +458,7 @@
             this.picMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.picMain.Location = new System.Drawing.Point(0, 0);
             this.picMain.Name = "picMain";
-            this.picMain.Size = new System.Drawing.Size(394, 233);
+            this.picMain.Size = new System.Drawing.Size(392, 231);
             this.picMain.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picMain.TabIndex = 0;
             this.picMain.TabStop = false;
@@ -466,6 +469,7 @@
             // 
             // dataRepeater1.ItemTemplate
             // 
+            this.dataRepeater1.ItemTemplate.Controls.Add(this.lblImageCount);
             this.dataRepeater1.ItemTemplate.Controls.Add(this.cmdDeleteResponse);
             this.dataRepeater1.ItemTemplate.Controls.Add(this.label14);
             this.dataRepeater1.ItemTemplate.Controls.Add(this.label13);
@@ -484,11 +488,22 @@
             this.dataRepeater1.ItemCloned += new Microsoft.VisualBasic.PowerPacks.DataRepeaterItemEventHandler(this.dataRepeater1_ItemCloned);
             this.dataRepeater1.DrawItem += new Microsoft.VisualBasic.PowerPacks.DataRepeaterItemEventHandler(this.dataRepeater1_DrawItem);
             // 
+            // lblImageCount
+            // 
+            this.lblImageCount.AutoSize = true;
+            this.lblImageCount.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblImageCount.ForeColor = System.Drawing.Color.Red;
+            this.lblImageCount.Location = new System.Drawing.Point(811, 36);
+            this.lblImageCount.Name = "lblImageCount";
+            this.lblImageCount.Size = new System.Drawing.Size(99, 13);
+            this.lblImageCount.TabIndex = 8;
+            this.lblImageCount.Text = "0 images attached.";
+            // 
             // cmdDeleteResponse
             // 
             this.cmdDeleteResponse.BackColor = System.Drawing.SystemColors.ControlLight;
             this.cmdDeleteResponse.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmdDeleteResponse.Location = new System.Drawing.Point(843, 3);
+            this.cmdDeleteResponse.Location = new System.Drawing.Point(827, 2);
             this.cmdDeleteResponse.Name = "cmdDeleteResponse";
             this.cmdDeleteResponse.Size = new System.Drawing.Size(55, 25);
             this.cmdDeleteResponse.TabIndex = 7;
@@ -500,18 +515,20 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(706, 33);
+            this.label14.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Location = new System.Drawing.Point(690, 32);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(20, 13);
+            this.label14.Size = new System.Drawing.Size(19, 13);
             this.label14.TabIndex = 6;
             this.label14.Text = "To";
             // 
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(696, 7);
+            this.label13.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(680, 6);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(30, 13);
+            this.label13.Size = new System.Drawing.Size(31, 13);
             this.label13.TabIndex = 5;
             this.label13.Text = "From";
             // 
@@ -532,7 +549,7 @@
             this.cboResponseTo.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cboResponseTo.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboResponseTo.FormattingEnabled = true;
-            this.cboResponseTo.Location = new System.Drawing.Point(729, 30);
+            this.cboResponseTo.Location = new System.Drawing.Point(713, 29);
             this.cboResponseTo.Name = "cboResponseTo";
             this.cboResponseTo.Size = new System.Drawing.Size(95, 24);
             this.cboResponseTo.TabIndex = 2;
@@ -545,7 +562,7 @@
             this.cboResponseFrom.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cboResponseFrom.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboResponseFrom.FormattingEnabled = true;
-            this.cboResponseFrom.Location = new System.Drawing.Point(729, 4);
+            this.cboResponseFrom.Location = new System.Drawing.Point(713, 3);
             this.cboResponseFrom.Name = "cboResponseFrom";
             this.cboResponseFrom.Size = new System.Drawing.Size(95, 24);
             this.cboResponseFrom.TabIndex = 1;
@@ -569,7 +586,7 @@
             this.rtbResponse.Location = new System.Drawing.Point(109, 0);
             this.rtbResponse.Name = "rtbResponse";
             this.rtbResponse.ReadOnly = true;
-            this.rtbResponse.Size = new System.Drawing.Size(587, 57);
+            this.rtbResponse.Size = new System.Drawing.Size(568, 57);
             this.rtbResponse.TabIndex = 0;
             this.rtbResponse.TabStop = false;
             this.rtbResponse.Text = "";
@@ -589,22 +606,33 @@
             // panelSummary
             // 
             this.panelSummary.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelSummary.Controls.Add(this.lblTotalIssues);
             this.panelSummary.Controls.Add(this.cmdFilterText);
             this.panelSummary.Controls.Add(this.chkFilterUnresolved);
             this.panelSummary.Controls.Add(this.lblSeparator);
             this.panelSummary.Controls.Add(this.lblSummary);
-            this.panelSummary.Controls.Add(this.lblSmartDataIssues);
-            this.panelSummary.Controls.Add(this.lblQuotaIssues);
-            this.panelSummary.Controls.Add(this.lblCodingIssues);
-            this.panelSummary.Controls.Add(this.lblInterfaceIssues);
-            this.panelSummary.Controls.Add(this.lblWordingIssues);
-            this.panelSummary.Controls.Add(this.lblTypoIssues);
-            this.panelSummary.Controls.Add(this.lblSkipIssues);
-            this.panelSummary.Controls.Add(this.lblTotalIssues);
+            this.panelSummary.Controls.Add(this.lblIssueType7);
+            this.panelSummary.Controls.Add(this.lblIssueType6);
+            this.panelSummary.Controls.Add(this.lblIssueType5);
+            this.panelSummary.Controls.Add(this.lblIssueType4);
+            this.panelSummary.Controls.Add(this.lblIssueType3);
+            this.panelSummary.Controls.Add(this.lblIssueType2);
+            this.panelSummary.Controls.Add(this.lblIssueType1);
+            this.panelSummary.Controls.Add(this.lblUnresolvedIssues);
             this.panelSummary.Location = new System.Drawing.Point(321, 92);
             this.panelSummary.Name = "panelSummary";
             this.panelSummary.Size = new System.Drawing.Size(649, 169);
             this.panelSummary.TabIndex = 21;
+            // 
+            // lblTotalIssues
+            // 
+            this.lblTotalIssues.AutoSize = true;
+            this.lblTotalIssues.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTotalIssues.Location = new System.Drawing.Point(332, 30);
+            this.lblTotalIssues.Name = "lblTotalIssues";
+            this.lblTotalIssues.Size = new System.Drawing.Size(108, 16);
+            this.lblTotalIssues.TabIndex = 55;
+            this.lblTotalIssues.Text = "## total issue(s).";
             // 
             // cmdFilterText
             // 
@@ -647,85 +675,85 @@
             this.lblSummary.TabIndex = 51;
             this.lblSummary.Text = "Issues Summary";
             // 
-            // lblSmartDataIssues
+            // lblIssueType7
             // 
-            this.lblSmartDataIssues.AutoSize = true;
-            this.lblSmartDataIssues.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSmartDataIssues.Location = new System.Drawing.Point(347, 117);
-            this.lblSmartDataIssues.Name = "lblSmartDataIssues";
-            this.lblSmartDataIssues.Size = new System.Drawing.Size(117, 16);
-            this.lblSmartDataIssues.TabIndex = 43;
-            this.lblSmartDataIssues.Text = "Smart Data Issues.";
+            this.lblIssueType7.AutoSize = true;
+            this.lblIssueType7.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblIssueType7.Location = new System.Drawing.Point(347, 117);
+            this.lblIssueType7.Name = "lblIssueType7";
+            this.lblIssueType7.Size = new System.Drawing.Size(73, 16);
+            this.lblIssueType7.TabIndex = 43;
+            this.lblIssueType7.Text = "IssueType7";
             // 
-            // lblQuotaIssues
+            // lblIssueType6
             // 
-            this.lblQuotaIssues.AutoSize = true;
-            this.lblQuotaIssues.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblQuotaIssues.Location = new System.Drawing.Point(347, 94);
-            this.lblQuotaIssues.Name = "lblQuotaIssues";
-            this.lblQuotaIssues.Size = new System.Drawing.Size(86, 16);
-            this.lblQuotaIssues.TabIndex = 42;
-            this.lblQuotaIssues.Text = "Quota Issues.";
+            this.lblIssueType6.AutoSize = true;
+            this.lblIssueType6.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblIssueType6.Location = new System.Drawing.Point(347, 94);
+            this.lblIssueType6.Name = "lblIssueType6";
+            this.lblIssueType6.Size = new System.Drawing.Size(73, 16);
+            this.lblIssueType6.TabIndex = 42;
+            this.lblIssueType6.Text = "IssueType6";
             // 
-            // lblCodingIssues
+            // lblIssueType5
             // 
-            this.lblCodingIssues.AutoSize = true;
-            this.lblCodingIssues.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCodingIssues.Location = new System.Drawing.Point(347, 66);
-            this.lblCodingIssues.Name = "lblCodingIssues";
-            this.lblCodingIssues.Size = new System.Drawing.Size(265, 16);
-            this.lblCodingIssues.TabIndex = 41;
-            this.lblCodingIssues.Text = "## Coding/Response Issues. ## unresolved.";
+            this.lblIssueType5.AutoSize = true;
+            this.lblIssueType5.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblIssueType5.Location = new System.Drawing.Point(347, 66);
+            this.lblIssueType5.Name = "lblIssueType5";
+            this.lblIssueType5.Size = new System.Drawing.Size(73, 16);
+            this.lblIssueType5.TabIndex = 41;
+            this.lblIssueType5.Text = "IssueType5";
             // 
-            // lblInterfaceIssues
+            // lblIssueType4
             // 
-            this.lblInterfaceIssues.AutoSize = true;
-            this.lblInterfaceIssues.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblInterfaceIssues.Location = new System.Drawing.Point(38, 140);
-            this.lblInterfaceIssues.Name = "lblInterfaceIssues";
-            this.lblInterfaceIssues.Size = new System.Drawing.Size(133, 16);
-            this.lblInterfaceIssues.TabIndex = 40;
-            this.lblInterfaceIssues.Text = "User Interface Issues.";
+            this.lblIssueType4.AutoSize = true;
+            this.lblIssueType4.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblIssueType4.Location = new System.Drawing.Point(38, 140);
+            this.lblIssueType4.Name = "lblIssueType4";
+            this.lblIssueType4.Size = new System.Drawing.Size(73, 16);
+            this.lblIssueType4.TabIndex = 40;
+            this.lblIssueType4.Text = "IssueType4";
             // 
-            // lblWordingIssues
+            // lblIssueType3
             // 
-            this.lblWordingIssues.AutoSize = true;
-            this.lblWordingIssues.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblWordingIssues.Location = new System.Drawing.Point(38, 117);
-            this.lblWordingIssues.Name = "lblWordingIssues";
-            this.lblWordingIssues.Size = new System.Drawing.Size(100, 16);
-            this.lblWordingIssues.TabIndex = 39;
-            this.lblWordingIssues.Text = "Wording Issues.";
+            this.lblIssueType3.AutoSize = true;
+            this.lblIssueType3.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblIssueType3.Location = new System.Drawing.Point(38, 117);
+            this.lblIssueType3.Name = "lblIssueType3";
+            this.lblIssueType3.Size = new System.Drawing.Size(73, 16);
+            this.lblIssueType3.TabIndex = 39;
+            this.lblIssueType3.Text = "IssueType3";
             // 
-            // lblTypoIssues
+            // lblIssueType2
             // 
-            this.lblTypoIssues.AutoSize = true;
-            this.lblTypoIssues.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTypoIssues.Location = new System.Drawing.Point(38, 91);
-            this.lblTypoIssues.Name = "lblTypoIssues";
-            this.lblTypoIssues.Size = new System.Drawing.Size(251, 16);
-            this.lblTypoIssues.TabIndex = 38;
-            this.lblTypoIssues.Text = "## Typo/Aesthetic Issues. ## unresolved.";
+            this.lblIssueType2.AutoSize = true;
+            this.lblIssueType2.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblIssueType2.Location = new System.Drawing.Point(38, 91);
+            this.lblIssueType2.Name = "lblIssueType2";
+            this.lblIssueType2.Size = new System.Drawing.Size(73, 16);
+            this.lblIssueType2.TabIndex = 38;
+            this.lblIssueType2.Text = "IssueType2";
             // 
-            // lblSkipIssues
+            // lblIssueType1
             // 
-            this.lblSkipIssues.AutoSize = true;
-            this.lblSkipIssues.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSkipIssues.Location = new System.Drawing.Point(38, 66);
-            this.lblSkipIssues.Name = "lblSkipIssues";
-            this.lblSkipIssues.Size = new System.Drawing.Size(110, 16);
-            this.lblSkipIssues.TabIndex = 37;
-            this.lblSkipIssues.Text = "Skip/Filter Issues.";
+            this.lblIssueType1.AutoSize = true;
+            this.lblIssueType1.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblIssueType1.Location = new System.Drawing.Point(38, 66);
+            this.lblIssueType1.Name = "lblIssueType1";
+            this.lblIssueType1.Size = new System.Drawing.Size(73, 16);
+            this.lblIssueType1.TabIndex = 37;
+            this.lblIssueType1.Text = "IssueType1";
             // 
-            // lblTotalIssues
+            // lblUnresolvedIssues
             // 
-            this.lblTotalIssues.AutoSize = true;
-            this.lblTotalIssues.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTotalIssues.Location = new System.Drawing.Point(205, 33);
-            this.lblTotalIssues.Name = "lblTotalIssues";
-            this.lblTotalIssues.Size = new System.Drawing.Size(200, 16);
-            this.lblTotalIssues.TabIndex = 35;
-            this.lblTotalIssues.Text = "## total issue(s). ## unresolved.";
+            this.lblUnresolvedIssues.AutoSize = true;
+            this.lblUnresolvedIssues.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUnresolvedIssues.Location = new System.Drawing.Point(152, 30);
+            this.lblUnresolvedIssues.Name = "lblUnresolvedIssues";
+            this.lblUnresolvedIssues.Size = new System.Drawing.Size(106, 16);
+            this.lblUnresolvedIssues.TabIndex = 35;
+            this.lblUnresolvedIssues.Text = "## unresolved.";
             // 
             // menuStrip1
             // 
@@ -839,6 +867,7 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.lblEnteredBy);
             this.panel1.Controls.Add(this.cmdSave);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.label18);
@@ -869,6 +898,16 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(956, 233);
             this.panel1.TabIndex = 13;
+            // 
+            // lblEnteredBy
+            // 
+            this.lblEnteredBy.AutoSize = true;
+            this.lblEnteredBy.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblEnteredBy.Location = new System.Drawing.Point(791, 207);
+            this.lblEnteredBy.Name = "lblEnteredBy";
+            this.lblEnteredBy.Size = new System.Drawing.Size(60, 13);
+            this.lblEnteredBy.TabIndex = 41;
+            this.lblEnteredBy.Text = "Entered By";
             // 
             // cmdSave
             // 
@@ -990,7 +1029,7 @@
             // 
             // cboResolvedBy
             // 
-            this.cboResolvedBy.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.cboResolvedBy.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
             this.cboResolvedBy.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cboResolvedBy.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboResolvedBy.FormattingEnabled = true;
@@ -1056,7 +1095,7 @@
             // 
             // cboIssueCategory
             // 
-            this.cboIssueCategory.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.cboIssueCategory.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
             this.cboIssueCategory.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cboIssueCategory.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboIssueCategory.FormattingEnabled = true;
@@ -1064,11 +1103,12 @@
             this.cboIssueCategory.Name = "cboIssueCategory";
             this.cboIssueCategory.Size = new System.Drawing.Size(133, 24);
             this.cboIssueCategory.TabIndex = 20;
+            this.cboIssueCategory.Validating += new System.ComponentModel.CancelEventHandler(this.cboIssueCategory_Validating);
             this.cboIssueCategory.Validated += new System.EventHandler(this.Control_Validated);
             // 
             // cboIssueTo
             // 
-            this.cboIssueTo.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.cboIssueTo.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
             this.cboIssueTo.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cboIssueTo.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboIssueTo.FormattingEnabled = true;
@@ -1080,7 +1120,7 @@
             // 
             // cboIssueFrom
             // 
-            this.cboIssueFrom.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.cboIssueFrom.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
             this.cboIssueFrom.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cboIssueFrom.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboIssueFrom.FormattingEnabled = true;
@@ -1286,7 +1326,8 @@
             this.picResponse.Dock = System.Windows.Forms.DockStyle.Fill;
             this.picResponse.Location = new System.Drawing.Point(0, 0);
             this.picResponse.Name = "picResponse";
-            this.picResponse.Size = new System.Drawing.Size(394, 223);
+            this.picResponse.Size = new System.Drawing.Size(392, 221);
+            this.picResponse.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picResponse.TabIndex = 53;
             this.picResponse.TabStop = false;
             // 
@@ -1298,6 +1339,7 @@
             // 
             // panelResponseImages
             // 
+            this.panelResponseImages.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelResponseImages.Controls.Add(this.navResponseImages);
             this.panelResponseImages.Controls.Add(this.picResponse);
             this.panelResponseImages.Location = new System.Drawing.Point(976, 528);
@@ -1323,14 +1365,14 @@
             this.bindingNavigatorSeparator8,
             this.bindingNavigatorAddNewItem1,
             this.bindingNavigatorDeleteItem1});
-            this.navResponseImages.Location = new System.Drawing.Point(0, 198);
+            this.navResponseImages.Location = new System.Drawing.Point(0, 196);
             this.navResponseImages.MoveFirstItem = this.bindingNavigatorMoveFirstItem2;
             this.navResponseImages.MoveLastItem = this.bindingNavigatorMoveLastItem2;
             this.navResponseImages.MoveNextItem = this.bindingNavigatorMoveNextItem2;
             this.navResponseImages.MovePreviousItem = this.bindingNavigatorMovePreviousItem2;
             this.navResponseImages.Name = "navResponseImages";
             this.navResponseImages.PositionItem = this.bindingNavigatorPositionItem2;
-            this.navResponseImages.Size = new System.Drawing.Size(394, 25);
+            this.navResponseImages.Size = new System.Drawing.Size(392, 25);
             this.navResponseImages.TabIndex = 54;
             this.navResponseImages.Text = "bindingNavigator2";
             // 
@@ -1526,14 +1568,14 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Panel panelSummary;
-        private System.Windows.Forms.Label lblSmartDataIssues;
-        private System.Windows.Forms.Label lblQuotaIssues;
-        private System.Windows.Forms.Label lblCodingIssues;
-        private System.Windows.Forms.Label lblInterfaceIssues;
-        private System.Windows.Forms.Label lblWordingIssues;
-        private System.Windows.Forms.Label lblTypoIssues;
-        private System.Windows.Forms.Label lblSkipIssues;
-        private System.Windows.Forms.Label lblTotalIssues;
+        private System.Windows.Forms.Label lblIssueType7;
+        private System.Windows.Forms.Label lblIssueType6;
+        private System.Windows.Forms.Label lblIssueType5;
+        private System.Windows.Forms.Label lblIssueType4;
+        private System.Windows.Forms.Label lblIssueType3;
+        private System.Windows.Forms.Label lblIssueType2;
+        private System.Windows.Forms.Label lblIssueType1;
+        private System.Windows.Forms.Label lblUnresolvedIssues;
         private System.Windows.Forms.Label lblSummary;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem formToolStripMenuItem;
@@ -1620,5 +1662,8 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button cmdSave;
+        private System.Windows.Forms.Label lblTotalIssues;
+        private System.Windows.Forms.Label lblImageCount;
+        private System.Windows.Forms.Label lblEnteredBy;
     }
 }

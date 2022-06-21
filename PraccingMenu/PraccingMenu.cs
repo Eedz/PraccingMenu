@@ -18,7 +18,7 @@ namespace PraccingMenu
 {
     public partial class PraccingMenu : Form
     {
-        public UserPrefs CurrentUser;
+        public UserRecord CurrentUser;
 
         public PraccingMenu()
         {
@@ -28,7 +28,6 @@ namespace PraccingMenu
             this.Location = new Point(10, 10);
 
             CurrentUser = DBAction.GetUser(Environment.UserName);
-            CurrentUser.PraccingEntrySurvey = DBAction.GetPraccingEntrySurvey(CurrentUser);
 
         }
 
@@ -36,10 +35,11 @@ namespace PraccingMenu
 
         private void cmdOpenPraccingEntry_Click(object sender, EventArgs e)
         {
-            int survID = CurrentUser.PraccingEntrySurvey;
-            if (survID == 0)
-                survID = 899;
+            var state = CurrentUser.FormStates.Where(x => x.FormName.Equals("frmIssuesTracking") && x.FormNum == 1).First();
+            int survID = 899;
+            if (state != null) survID = state.FilterID;
             PraccingEntry frm = new PraccingEntry(survID);
+
             frm.frmParent = this;
             frm.key = "PraccingEntry";
             AddTab(frm, "PraccingEntry", "Praccing Issues - Entry");
@@ -134,7 +134,7 @@ namespace PraccingMenu
 
                     TableCell varname = new TableCell();
                     ParagraphProperties pPr2 = new ParagraphProperties(new SpacingBetweenLines() { Before = "0", After = "0", Line = "240", LineRule = LineSpacingRuleValues.Auto, AfterAutoSpacing = false, BeforeAutoSpacing = false });
-                    varname.Append(new Paragraph(pPr2, new Run(new Text(q.VarName.FullVarName))));
+                    varname.Append(new Paragraph(pPr2, new Run(new Text(q.VarName.VarName))));
                     row.Append(varname);
 
                     for (int c = 0; c < num_ids; c++)
@@ -155,7 +155,12 @@ namespace PraccingMenu
 
             try
             {
-                appWord.Documents.Open(filePath);
+                doc = appWord.Documents.Open(filePath);
+
+                // footer text                  
+                foreach (Word.Section s in doc.Sections)
+                    s.Footers[Word.WdHeaderFooterIndex.wdHeaderFooterPrimary].Range.InsertAfter("\t" + survey.SurveyCode + " Praccing Sheet" +
+                        "\t\t" + "Generated on " + DateTime.Today.ToString("d"));
 
                 appWord.Visible = true;
             }

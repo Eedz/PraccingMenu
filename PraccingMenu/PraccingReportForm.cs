@@ -25,7 +25,7 @@ namespace PraccingMenu
         {
             InitializeComponent();
 
-            SurveyList = DBAction.GetAllSurveysInfo();
+            SurveyList =new List<Survey>(DBAction.GetAllSurveysInfo());
 
 
             cboSurvey.DisplayMember = "SurveyCode";
@@ -61,7 +61,12 @@ namespace PraccingMenu
 
             if (page == null)
             {
-                PraccingEntry frm = new PraccingEntry(frmParent.CurrentUser.PraccingEntrySurvey);
+                var state = frmParent.CurrentUser.FormStates.Where(x => x.FormName.Equals("frmIssuesTracking") && x.FormNum == 1).First();
+                int survID = 899;
+                if (state != null)
+                    survID = state.FilterID;
+
+                PraccingEntry frm = new PraccingEntry(survID);
                 frm.frmParent = frmParent;
                 frm.key = "PraccingEntry";
                 frmParent.AddTab(frm, "PraccingEntry", "Praccing Issues - Entry");
@@ -132,6 +137,9 @@ namespace PraccingMenu
 
         private void cmdGenerate_Click(object sender, EventArgs e)
         {
+            IssuesList = DBAction.GetPraccingIssues(SelectedSurvey.SID); // get all the issues again in case any were added since opening the form
+
+            // get the filtered list
             FilteredIssuesList = GetIssueList();
 
             if (FilteredIssuesList.Count == 0)
@@ -159,6 +167,7 @@ namespace PraccingMenu
             report.IncludePraccInstructions = chkPraccInstructions.Checked;
             report.IncludeQnums = chkIncludeQnums.Checked;
             report.IncludePrevNames = chkIncludePrevNames.Checked;
+            report.Recipients = GetRecipients();
             report.Issues = FilteredIssuesList;
 
             report.CreateReport();
@@ -225,7 +234,7 @@ namespace PraccingMenu
                     if (q == null)
                         continue;
 
-                    var prev = DBAction.GetPreviousNames(SelectedSurvey.SurveyCode, q.VarName.FullVarName, false);
+                    var prev = DBAction.GetPreviousNames(SelectedSurvey.SurveyCode, q.VarName.VarName, false);
 
                     if (prev.Count <= 1)
                         continue;
@@ -512,7 +521,23 @@ namespace PraccingMenu
             return languageList;
         }
 
-        
+        List<string> GetRecipients()
+        {
+            List<string> finalList = new List<string>();
+            if (lstTo.SelectedItems.Count>0 && ((Person)lstTo.SelectedItems[0]).ID != -1)
+            {
+                foreach (Person s in lstTo.SelectedItems)
+                    finalList.Add(s.Name);
+            }
+            if (lstLastUpdateTo.SelectedItems.Count > 0 && ((Person)lstLastUpdateTo.SelectedItems[0]).ID != -1)
+            {
+                foreach (Person s in lstLastUpdateTo.SelectedItems)
+                    if (!finalList.Contains(s.Name))
+                        finalList.Add(s.Name);
+            }
+
+            return finalList;
+        }
 
         
     }

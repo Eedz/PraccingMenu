@@ -24,10 +24,12 @@ namespace PraccingMenu
         public PraccingMenu frmParent;
         public string key;
 
+        UserPrefs CurrentUser;
         BindingSource bsIssues;
         BindingSource bsExistingResponses;
         BindingSource bsNewResponses;
 
+        List<PraccingIssue> ReferenceList; // list of existing issues to compare against
         // list of praccing records from file
         List<PraccingIssue> importIssues;
         List<PraccingResponse> importResponses;
@@ -69,6 +71,8 @@ namespace PraccingMenu
         {
             InitializeComponent();
 
+            CurrentUser = DBAction.GetUser(Environment.UserName);
+
             doubleResponseHeight = 488;
             singleResponseHeight = 244;
 
@@ -81,11 +85,11 @@ namespace PraccingMenu
             images = new List<StringPair>();
 
             // get list of people
-            personList = DBAction.GetPeople();
+            personList = new List<Person>(DBAction.GetPeople());
             // get list of categories
             categoryList = DBAction.GetPraccingCategories();
             // get list of surveys
-            surveyList = DBAction.GetAllSurveysInfo();
+            surveyList = new List<Survey>(DBAction.GetAllSurveysInfo());
 
             AppImageRepo = System.IO.Path.GetDirectoryName(Application.StartupPath);
 
@@ -121,6 +125,10 @@ namespace PraccingMenu
             cboTo.ValueMember = "ID";
             cboTo.DisplayMember = "Name";
             cboTo.DataSource = new List<Person>(personList);
+
+            cboResName.ValueMember = "ID";
+            cboResName.DisplayMember = "Name";
+            cboResName.DataSource = new List<Person>(personList);
 
             cboNewFrom.ValueMember = "ID";
             cboNewFrom.DisplayMember = "Name";
@@ -203,6 +211,7 @@ namespace PraccingMenu
 
             txtPath.Text = dialog.FileName;
             cmdLoad.Visible = true;
+            cmdLoad.Enabled = true;
         }
 
         private void cmdLoad_Click(object sender, EventArgs e)
@@ -222,17 +231,15 @@ namespace PraccingMenu
 
             try
             {
+                ReferenceList = DBAction.GetPraccingIssues(surveyList.First(x => x.SurveyCode.Equals(SurveyCode)).SID);
                 LoadRecords(txtPath.Text);
 
                 ShowResults();
+                cmdLoad.Enabled = false;
             }
             catch (IOException)
             {
                 MessageBox.Show("Unable to access the file. Make sure it is not open in the background and try again.");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
             }
 
         }
@@ -281,6 +288,20 @@ namespace PraccingMenu
                 chkKeepIssue.Text = "Keep?";
             }
 
+        }
+
+        private void chkResolved_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkResolved.Checked)
+            {
+                CurrentIssue.ResolvedDate = DateTime.Today;
+                CurrentIssue.ResolvedBy.ID = CurrentUser.userid;
+            }
+            else
+            {
+                CurrentIssue.ResolvedDate = null;
+                CurrentIssue.ResolvedBy.ID = 0;
+            }
         }
 
         private void chkKeepResponse_CheckedChanged(object sender, EventArgs e)
@@ -342,6 +363,10 @@ namespace PraccingMenu
         {
             issueIDOffset = 0;
             responseIDOffset = 0;
+
+            datesToFix.Clear();
+            namesToFix.Clear();
+
             using (WordprocessingDocument doc = WordprocessingDocument.Open(filePath, false))
             {
                 Body body = doc.MainDocumentPart.Document.Body;
@@ -358,6 +383,11 @@ namespace PraccingMenu
                     rowCount++;
                     if (rowCount == 1)
                         continue;
+
+                    if (MissingDates(row))
+                    {
+                        throw new Exception("One or more issues / responses is missing a dates. Please enter the date and try again.");
+                     }
 
                     CheckValidDates(row);
                     CheckValidNames(row);
@@ -407,25 +437,31 @@ namespace PraccingMenu
                     if (issueNumber.EndsWith("-1"))
                     {
                         AddMainIssue(row);
+                        minuteOffset = 0;
                     }
                     else if (issueNumber.Contains("-"))
                     {
+                        minuteOffset++;
                         AddResponse(row);
+                        
                     }
                     else if (!string.IsNullOrEmpty(varname) || issueNumber.ToLower().Contains("new"))
                     {
                         AddMainIssue(row);
+                        minuteOffset = 0;
                     }
                     else if (string.IsNullOrEmpty(issueNumber))
                     {
+                        minuteOffset++;
                         AddResponse(row, lastIssueNo);
+                        
                     }
                     else
                     {
 
                     }
 
-                    minuteOffset = 0;
+                    
 
                 }
             }
@@ -472,7 +508,7 @@ namespace PraccingMenu
                         {
                             toSaveImage.Save(AppImageRepo + @"\" + imageFileName);
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             
                         }
@@ -487,7 +523,19 @@ namespace PraccingMenu
             return imageList;
         }
 
-        
+        private bool MissingDates(TableRow row)
+        {
+            var cells = row.Elements<TableCell>();
+
+            string date = GetContentFromCell(cells, DateColumn, false);
+            string desc = GetContentFromCell(cells, DescriptionColumn, false);
+            if (string.IsNullOrEmpty(date) && !string.IsNullOrEmpty(desc))
+                return true;
+
+            return false;
+            
+        }
+
 
         private void CheckValidDates(TableRow row)
         {
@@ -599,24 +647,28 @@ namespace PraccingMenu
             mainIssue.Survey.SID = surveyList.First(x => x.SurveyCode.Equals(SurveyCode)).SID;
             mainIssue.Survey.SurveyCode = SurveyCode;
             mainIssue.IssueNo = issueNo;
-            mainIssue.ID = DBAction.GetPraccingID(mainIssue.Survey.SurveyCode, mainIssue.IssueNo);
-            if (mainIssue.ID > 0)
-                mainIssue.Resolved = DBAction.IsPraccingIssueResolved(mainIssue.ID);
-            else
-                mainIssue.Resolved = false;
             
-            mainIssue.VarNames = varNames;
-            mainIssue.Description = description;
-            mainIssue.IssueDate = issueDate;
-            mainIssue.IssueFrom = issueFrom;
-            mainIssue.IssueTo = issueTo;
-            mainIssue.Category = issueCategory;
-            mainIssue.Images = issueImages;
+            var matchingIssue = ReferenceList.FirstOrDefault(x => x.Survey.SurveyCode.Equals(SurveyCode) && x.IssueNo == issueNo);
+            if (matchingIssue != null)
+            {
+                mainIssues.Add(matchingIssue);
 
-            // get responses for this issue
-            if (mainIssue.ID != 0) mainIssue.Responses.AddRange(DBAction.GetPraccResponses(mainIssue.ID));
 
-            mainIssues.Add(mainIssue);
+            }
+            else
+            {
+                mainIssue.VarNames = varNames;
+                mainIssue.Description = description;
+                mainIssue.IssueDate = issueDate;
+                mainIssue.IssueFrom = issueFrom;
+                mainIssue.IssueTo = issueTo;
+                mainIssue.Category = issueCategory;
+                mainIssue.Images = issueImages;
+
+                mainIssues.Add(mainIssue);
+            }
+
+            
         }
 
         
@@ -642,13 +694,28 @@ namespace PraccingMenu
             description = GetContentFromCell(cells, DescriptionColumn, true);
             description = Utilities.TrimString(description, " ");
             description = Utilities.TrimString(description, "<br>");
-         
+
+            string forcompare = Utilities.PrepareTextCompare(description);
 
             if (string.IsNullOrEmpty(description))
                 return;
 
-            int responseID = DBAction.GetPraccResponseID(SurveyCode, issueNo, description);
-
+            int responseID;
+            PraccingIssue matchingIssue = (PraccingIssue)ReferenceList.FirstOrDefault(x => x.Survey.SurveyCode.Equals(SurveyCode) && x.IssueNo == issueNo);
+            if (matchingIssue != null)
+            {
+                PraccingResponse matchingResponse = (PraccingResponse)matchingIssue.Responses.FirstOrDefault(x => Utilities.PrepareTextCompare(x.Response).Equals(forcompare));
+                
+                if (matchingResponse != null)
+                    responseID = matchingResponse.ID;
+                else
+                    responseID = 0;
+            }
+            else
+            {
+                responseID = 0;
+            }
+            
             // if the ID is not 0, this response already exists and should be already part of the main issue
             // only continue if this is a new response
             if (responseID != 0) 
@@ -737,7 +804,18 @@ namespace PraccingMenu
                 {
                 var found = datesToFix.Where(x => x.String1.Equals(date)).FirstOrDefault();
                 if (found != null)
-                    responseDate = DateTime.Parse(found.String2).AddMinutes(minuteOffset);
+                {
+                    responseDate = DateTime.Parse(found.String2);
+
+                    responseDate += DateTime.Now.TimeOfDay;
+                    responseDate.AddMinutes(minuteOffset);
+                }
+            }
+            else
+            {
+                responseDate = DateTime.Parse(date);
+                responseDate += DateTime.Now.TimeOfDay;
+                responseDate.AddMinutes(minuteOffset);
             }
 
             return responseDate;
@@ -950,7 +1028,7 @@ namespace PraccingMenu
         private void RefreshMainIssues()
         {
 
-            mainIssues = mainIssues.Where(x => x.Responses.Where(y => y.ID < 0).Count() > 0).ToList();
+            mainIssues = mainIssues.Where(x => x.Responses.Where(y => y.ID < 0).Count() > 0 || x.ID==0).ToList();
 
             bsIssues.DataSource = null;
             bsIssues.DataSource = mainIssues;
@@ -1058,7 +1136,11 @@ namespace PraccingMenu
             {
                 // skip those that are already in the database
                 if (pi.ID > 0)
+                {
+                    DBAction.UpdatePraccingIssue(pi);
                     continue;
+                }
+                    
 
                 int tempIssueNo = pi.IssueNo;
                 pi.IssueNo = DBAction.GetNextPraccingIssueNo(pi.Survey.SID);
@@ -1117,7 +1199,7 @@ namespace PraccingMenu
                 }
 
 
-                DBAction.InsertPraccingImage(pr.ID, pr.Images);
+                DBAction.InsertPraccingResponseImage(pr.ID, pr.Images);
 
             }
             // if the response was inserted successfully, remove it from the list
@@ -1141,6 +1223,8 @@ namespace PraccingMenu
             BindControl(cboCategory, "SelectedValue", bsIssues, "Category.ID");
             BindControl(dtpIssueDate, "Value", bsIssues, "IssueDate", true);
             BindControl(chkResolved, "Checked", bsIssues, "Resolved");
+            BindControl(dtpResDate, "Value", bsIssues, "ResolvedDate", true);
+            BindControl(cboResName, "SelectedValue", bsIssues, "ResolvedBy.ID", true);
 
             BindControl(dtpOldTime, "Value", bsExistingResponses, "ResponseDate",true);
             BindControl(dtpOldDate, "Value", bsExistingResponses, "ResponseDate", true);
@@ -1161,6 +1245,8 @@ namespace PraccingMenu
             cboCategory.DataBindings.Clear();
             dtpIssueDate.DataBindings.Clear();
             chkResolved.DataBindings.Clear();
+            cboResName.DataBindings.Clear();
+            dtpResDate.DataBindings.Clear();
 
             dtpOldTime.DataBindings.Clear();
             dtpOldDate.DataBindings.Clear();

@@ -28,7 +28,7 @@ namespace PraccingMenu
             ToEdit.ResponseTo = new Person(string.Copy(response.ResponseTo.Name), response.ResponseTo.ID);
             ToEdit.ResponseDate = response.ResponseDate;
 
-            List<Person> peopleList = DBAction.GetPeople();
+            List<Person> peopleList = new List<Person>(DBAction.GetPeople());
 
             cboFrom.DisplayMember = "Name";
             cboFrom.ValueMember = "ID";

@@ -98,7 +98,7 @@ namespace PraccingMenu
             var datasource = (List<SurveyQuestion>)((BindingSource)dataRepeater.DataSource).DataSource;
 
             var varBox = (TextBox)e.DataRepeaterItem.Controls.Find("txtVarName", false)[0];
-            varBox.Text = datasource[e.DataRepeaterItem.ItemIndex].VarName.FullVarName;
+            varBox.Text = datasource[e.DataRepeaterItem.ItemIndex].VarName.VarName;
 
             var varLabelBox = (TextBox)e.DataRepeaterItem.Controls.Find("txtVarLabel", false)[0];
             varLabelBox.Text = datasource[e.DataRepeaterItem.ItemIndex].VarName.VarLabel;
@@ -157,13 +157,13 @@ namespace PraccingMenu
             var currentQuestion = ((QuestionComment)datasource[e.DataRepeaterItem.ItemIndex]);
             
             var noteType = (TextBox)e.DataRepeaterItem.Controls.Find("txtNoteType", false)[0];
-            noteType.Text = currentQuestion.NoteType; 
+            noteType.Text = currentQuestion.NoteType.TypeName; 
 
             var noteDate = (DateTimePicker)e.DataRepeaterItem.Controls.Find("dtpNoteDate", false)[0];
-            noteDate.Value = currentQuestion.NoteDate;
+            noteDate.Value = currentQuestion.NoteDate.Value;
 
             var noteName = (TextBox)e.DataRepeaterItem.Controls.Find("txtNoteName", false)[0];
-            noteName.Text = currentQuestion.Name;
+            noteName.Text = currentQuestion.Author.Name;
 
             var noteText = (TextBox)e.DataRepeaterItem.Controls.Find("txtComment", false)[0];
             noteText.Text = currentQuestion.Notes.NoteText;

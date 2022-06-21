@@ -21,12 +21,13 @@ namespace PraccingMenu
         public PraccingMenu frmParent;
         public string key;
 
+        UserPrefs CurrentUser;
         PraccingIssue CurrentIssue;
         PraccingResponse CurrentResponse;
         List<PraccingIssue> IssuesList;
         List<Person> PeopleList;
         List<PraccingCategory> CategoryList;
-        List<Survey> SurveyList;
+        List<SurveyRecord> SurveyList;
 
         BindingSource bsMainIssues;
         BindingSource bsResponses;
@@ -44,8 +45,9 @@ namespace PraccingMenu
         {
             InitializeComponent();
 
+            CurrentUser = DBAction.GetUser(Environment.UserName);
             IssuesList = new List<PraccingIssue>();
-            PeopleList = DBAction.GetPeople();
+            PeopleList = new List<Person> (DBAction.GetPeople());
             CategoryList = DBAction.GetPraccingCategories();
             SurveyList = DBAction.GetAllSurveysInfo();
 
@@ -65,8 +67,9 @@ namespace PraccingMenu
 
             FillBoxes();
 
+            cboGoToSurvey.SelectedValueChanged += cboGoToSurvey_SelectedValueChanged;
             cboGoToSurvey.SelectedValue = SurvID;
-
+            
             BindProperties();
 
             this.MouseWheel += PraccingEntry_OnMouseWheel;
@@ -266,7 +269,7 @@ namespace PraccingMenu
             Survey selected = (Survey)cboGoToSurvey.SelectedItem;
 
             GoToSurvey(selected.SID);
-             
+
         }
 
         private void cboGoToIssueNo_SelectedValueChanged(object sender, EventArgs e)
@@ -386,6 +389,11 @@ namespace PraccingMenu
 
         private void cmdBrowseIssue_Click(object sender, EventArgs e)
         {
+            if (SaveRecord() == 1)
+            {
+                MessageBox.Show("Error saving this issue.");
+                return;
+            }
             BrowseIssues frm = new BrowseIssues(IssuesList);
 
             frm.ShowDialog();
@@ -497,14 +505,25 @@ namespace PraccingMenu
 
         private void chkFilterUnresolved_CheckedChanged(object sender, EventArgs e)
         {
+
             if (chkFilterUnresolved.Checked)
             {
+                var unresolved = IssuesList.Where(x => !x.Resolved);
+                if (unresolved.Count() == 0)
+                {
+                    MessageBox.Show("No unresolved issues found!");
+                    return;
+                }
+
+
                 bsMainIssues.DataSource = IssuesList.Where(x => !x.Resolved).ToList();
             }
             else
             {
                 bsMainIssues.DataSource = IssuesList;
             }
+
+            RefreshCurrentIssue();
         }
 
         private void cmdFilterText_Click(object sender, EventArgs e)
@@ -667,6 +686,17 @@ namespace PraccingMenu
             var rtb = (RichTextBox)e.DataRepeaterItem.Controls.Find("rtbResponse", false)[0];
             rtb.Rtf = item.ResponseRTF;
 
+            var label = (Label)e.DataRepeaterItem.Controls.Find("lblImageCount", false)[0];
+            int imageCount = item.Images.Count;
+
+            label.Visible = true;
+            if (imageCount > 1)
+                label.Text = imageCount + " images attached.";
+            else if (imageCount == 1)
+                label.Text = imageCount + " image attached.";
+            else
+                label.Visible = false;
+
         }
 
         private void cboResponseFrom_SelectedIndexChanged(object sender, EventArgs e)
@@ -773,8 +803,11 @@ namespace PraccingMenu
         /// </summary>
         private void SaveSurveyFilter()
         {
-            DBAction.UpdateFormSurvey("frmIssuesTracking", 1, ((Survey)cboGoToSurvey.SelectedItem).SID, 0, frmParent.CurrentUser);
-            frmParent.CurrentUser.PraccingEntrySurvey = ((Survey)cboGoToSurvey.SelectedItem).SID;
+            FormStateRecord state = frmParent.CurrentUser.FormStates.Where(x => x.FormName.Equals("frmIssuesTracking") && x.FormNum == 1).FirstOrDefault();
+            state.FilterID = ((Survey)cboGoToSurvey.SelectedItem).SID;
+            state.RecordPosition = bsMainIssues.Position;
+            state.Dirty = true;
+            state.SaveRecord();
         }
 
         /// <summary>
@@ -839,10 +872,29 @@ namespace PraccingMenu
             CurrentIssue = (PraccingIssue)bsMainIssues.Current;
 
             rtbDescription.Rtf = "";
-
+            
             if (CurrentIssue == null)
+            {
+                CurrentResponse = null;
+                bsResponses.DataSource = null;
+                RefreshCurrentResponse();
                 return;
-    
+            }
+
+            if (CurrentIssue.EnteredBy.ID != 0)
+            {
+                lblEnteredBy.Visible = true;
+                lblEnteredBy.Text = "Entered by " + CurrentIssue.EnteredBy.Name;
+            }
+            else
+                lblEnteredBy.Visible = false;
+
+            if (!CurrentIssue.Resolved)
+            {
+                dtpResolvedDate.Value = DateTime.Today;
+                dtpResolvedDate.Checked = false;
+            }
+                
 
             CurrentIssue.Responses.Sort((x, y) => x.ResponseDate.Value.CompareTo(y.ResponseDate));
 
@@ -882,31 +934,27 @@ namespace PraccingMenu
         private void UpdateSummary()
         {
             int total = IssuesList.Count();
-            int total_skips = IssuesList.Where(x => x.Category.ID == 1).Count();
-            int total_typos = IssuesList.Where(x => x.Category.ID == 2).Count();
-            int total_wordings = IssuesList.Where(x => x.Category.ID == 3).Count();
-            int total_interface = IssuesList.Where(x => x.Category.ID == 4).Count();
-            int total_coding = IssuesList.Where(x => x.Category.ID == 5).Count();
-            int total_quota = IssuesList.Where(x => x.Category.ID == 6).Count();
-            int total_smartdata = IssuesList.Where(x => x.Category.ID == 7).Count();
-
             int unres_total = IssuesList.Where(x => !x.Resolved).Count();
-            int unres_skips = IssuesList.Where(x => x.Category.ID == 1 && !x.Resolved).Count();
-            int unres_typos = IssuesList.Where(x => x.Category.ID == 2 && !x.Resolved).Count();
-            int unres_wordings = IssuesList.Where(x => x.Category.ID == 3 && !x.Resolved).Count();
-            int unres_interface = IssuesList.Where(x => x.Category.ID == 4 && !x.Resolved).Count();
-            int unres_coding = IssuesList.Where(x => x.Category.ID == 5 && !x.Resolved).Count();
-            int unres_quota = IssuesList.Where(x => x.Category.ID == 6 && !x.Resolved).Count();
-            int unres_smartdata = IssuesList.Where(x => x.Category.ID == 7 && !x.Resolved).Count();
 
-            lblTotalIssues.Text = total + " Total issue(s). " + unres_total + " unresolved." ;
-            lblSkipIssues.Text = total_skips + " Skip/Filter issues. " + unres_skips + " unresolved." ;
-            lblTypoIssues.Text = total_typos + " Typos/Aesthetic issues. " + unres_typos + " unresolved."; ;
-            lblWordingIssues.Text = total_wordings + " Wording issues. " + unres_wordings + " unresolved."; ;
-            lblInterfaceIssues.Text = total_interface + " User Interface issues. " + unres_interface + " unresolved."; ;
-            lblCodingIssues.Text = total_coding + " Coding/Response issues. " + unres_coding + " unresolved."; ;
-            lblQuotaIssues.Text = total_quota + " Quota issues. " + unres_quota + " unresolved."; ;
-            lblSmartDataIssues.Text = total_smartdata + " Smart Data issues. " + unres_smartdata + " unresolved."; ;
+            List<KeyValuePair<int, string>> totals = new List<KeyValuePair<int, string>>();
+
+            foreach (PraccingCategory pc in CategoryList) {
+                totals.Add(new KeyValuePair<int, string>(IssuesList.Where(x => x.Category.ID == pc.ID).Count(), 
+                    IssuesList.Where(x => x.Category.ID == pc.ID).Count() + " " + pc.Category + " issues. " + 
+                    IssuesList.Where(x => x.Category.ID == pc.ID && !x.Resolved).Count() + " unresolved."));
+            }
+
+            totals = totals.OrderByDescending(x => x.Key).ToList();
+
+            lblUnresolvedIssues.Text = unres_total + " unresolved. ";
+            lblTotalIssues.Text = total + " Total issue(s).";
+            lblIssueType1.Text = totals[0].Value;
+            lblIssueType2.Text = totals[1].Value;
+            lblIssueType3.Text = totals[2].Value;
+            lblIssueType4.Text = totals[3].Value;
+            lblIssueType5.Text = totals[4].Value;
+            lblIssueType6.Text = totals[5].Value;
+            lblIssueType7.Text = totals[6].Value;
 
         }
 
@@ -964,6 +1012,7 @@ namespace PraccingMenu
             Binding languageBinding = new Binding("SelectedItem", bsMainIssues, "Language", true);
             languageBinding.NullValue = "English";
             lstLanguage.DataBindings.Add(languageBinding);
+
             BindControl(chkResolved, "Checked", bsMainIssues, "Resolved");
             BindControl(cboResolvedBy, "SelectedValue", bsMainIssues, "ResolvedBy.ID");
 
@@ -973,7 +1022,8 @@ namespace PraccingMenu
             b.Parse += new ConvertEventHandler(dtp_Parse);
 
             BindControl(picMain, "ImageLocation", bsImages, "Path");
-            
+
+            //BindControl(lblEnteredBy, "Text", bsMainIssues, "EnteredBy.Name");
 
             // responses
             BindControl(dtpResponseDate, "Value", bsResponses, "ResponseDate");
@@ -1075,6 +1125,7 @@ namespace PraccingMenu
                     {
                         if (img.ID == 0)
                         {
+                            img.PraccID = pr.ID;
                             if (DBAction.InsertPraccingResponseImage(img) == 1)
                                 return 1;
                         }
@@ -1126,6 +1177,7 @@ namespace PraccingMenu
             CurrentIssue.IssueNo = IssuesList.Max(x => x.IssueNo) + 1;
             CurrentIssue.IssueDate = DateTime.Today;
             CurrentIssue.ResolvedDate = null;
+            CurrentIssue.EnteredBy = PeopleList.Where(x => x.ID == CurrentUser.userid).FirstOrDefault();
             bsMainIssues.ResetBindings(false);
             cmdDeleteIssue.Text = "Cancel";
         }
@@ -1154,6 +1206,7 @@ namespace PraccingMenu
             CurrentIssue.IssueNo =  1;
             CurrentIssue.IssueDate = DateTime.Today;
             CurrentIssue.ResolvedDate = null;
+            CurrentIssue.EnteredBy = PeopleList.Where(x => x.ID == CurrentUser.userid).FirstOrDefault();
             bsMainIssues.ResetBindings(false);
             cmdDeleteIssue.Text = "Cancel";
         }
@@ -1163,6 +1216,19 @@ namespace PraccingMenu
             Dirty = true;
         }
 
-        
+        private void cboIssueCategory_Validating(object sender, CancelEventArgs e)
+        {
+            
+            string s;
+            ComboBox cbo = (ComboBox)sender;
+
+            if (cbo.SelectedIndex == -1 && !string.IsNullOrEmpty(cbo.Text))
+            {
+                // Let's see if it ends with a slash
+                s = cbo.Text;
+                if (s.EndsWith("\\") || s.EndsWith("/"))
+                    cbo.SelectedIndex = cbo.FindString(s);
+            }
+        }
     }
 }

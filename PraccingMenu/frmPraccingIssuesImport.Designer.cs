@@ -103,6 +103,8 @@
             this.formToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cboResName = new System.Windows.Forms.ComboBox();
+            this.dtpResDate = new System.Windows.Forms.DateTimePicker();
             this.panelResults.SuspendLayout();
             this.panelNew.SuspendLayout();
             this.drNewResponses.ItemTemplate.SuspendLayout();
@@ -201,6 +203,8 @@
             // 
             // panelResults
             // 
+            this.panelResults.Controls.Add(this.cboResName);
+            this.panelResults.Controls.Add(this.dtpResDate);
             this.panelResults.Controls.Add(this.panelNew);
             this.panelResults.Controls.Add(this.panelExisting);
             this.panelResults.Controls.Add(this.cmdMoveIssue);
@@ -509,7 +513,7 @@
             // cmdMoveIssue
             // 
             this.cmdMoveIssue.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmdMoveIssue.Location = new System.Drawing.Point(851, 67);
+            this.cmdMoveIssue.Location = new System.Drawing.Point(865, 28);
             this.cmdMoveIssue.Name = "cmdMoveIssue";
             this.cmdMoveIssue.Size = new System.Drawing.Size(71, 23);
             this.cmdMoveIssue.TabIndex = 21;
@@ -635,7 +639,7 @@
             // 
             this.chkKeepIssue.Appearance = System.Windows.Forms.Appearance.Button;
             this.chkKeepIssue.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkKeepIssue.Location = new System.Drawing.Point(851, 38);
+            this.chkKeepIssue.Location = new System.Drawing.Point(865, 3);
             this.chkKeepIssue.Name = "chkKeepIssue";
             this.chkKeepIssue.Size = new System.Drawing.Size(71, 23);
             this.chkKeepIssue.TabIndex = 15;
@@ -648,12 +652,13 @@
             // 
             this.chkResolved.AutoSize = true;
             this.chkResolved.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkResolved.Location = new System.Drawing.Point(650, 14);
+            this.chkResolved.Location = new System.Drawing.Point(851, 69);
             this.chkResolved.Name = "chkResolved";
             this.chkResolved.Size = new System.Drawing.Size(78, 20);
             this.chkResolved.TabIndex = 14;
             this.chkResolved.Text = "Resolved";
             this.chkResolved.UseVisualStyleBackColor = true;
+            this.chkResolved.CheckedChanged += new System.EventHandler(this.chkResolved_CheckedChanged);
             // 
             // txtStatus
             // 
@@ -871,12 +876,28 @@
             this.clearToolStripMenuItem.Text = "Clear";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
             // 
+            // cboResName
+            // 
+            this.cboResName.FormattingEnabled = true;
+            this.cboResName.Location = new System.Drawing.Point(851, 118);
+            this.cboResName.Name = "cboResName";
+            this.cboResName.Size = new System.Drawing.Size(85, 21);
+            this.cboResName.TabIndex = 20;
+            // 
+            // dtpResDate
+            // 
+            this.dtpResDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpResDate.Location = new System.Drawing.Point(851, 95);
+            this.dtpResDate.Name = "dtpResDate";
+            this.dtpResDate.Size = new System.Drawing.Size(85, 20);
+            this.dtpResDate.TabIndex = 21;
+            // 
             // frmPraccingIssuesImport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(236)))), ((int)(((byte)(222)))), ((int)(((byte)(116)))));
-            this.ClientSize = new System.Drawing.Size(986, 861);
+            this.ClientSize = new System.Drawing.Size(986, 869);
             this.Controls.Add(this.panelResults);
             this.Controls.Add(this.cmdImport);
             this.Controls.Add(this.cmdLoad);
@@ -988,6 +1009,8 @@
         private System.Windows.Forms.ToolStripMenuItem formToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem;
+        private System.Windows.Forms.ComboBox cboResName;
+        private System.Windows.Forms.DateTimePicker dtpResDate;
     }
 }
 

@@ -22,7 +22,7 @@ namespace PraccingMenu
 
             cboSurvey.DisplayMember = "SurveyCode";
             cboSurvey.ValueMember = "SID";
-            cboSurvey.DataSource = DBAction.GetAllSurveys();
+            cboSurvey.DataSource = DBAction.GetAllSurveysInfo();
         }
 
         private void cmdOK_Click(object sender, EventArgs e)
